@@ -1,18 +1,32 @@
 const request = require('supertest');
 const server = require('./server.js');
+const bcrypt = require('bcryptjs');
+const Users = require('../users/users-model.js');
+
 
 describe('server.js', function() {
 
   describe('/api/auth/register', function() {
+
     it('should return JSON', function() {
+
+      const user = {"username": "testy mctest", "password": "123"}
+
       return request(server)
-        .post('/api/auth/register').send({"username": "testy mctest", "password": "123"})
+        .post('/api/auth/register').send(user)
         .then(res => {
           expect(res.type).toMatch(/json/i);
         });
     });
 
-    it.todo('should create a hashed password')
+    it('should have a property of username', function() {
+      
+      return request(server)
+        .post('/api/auth/register').send({"username": "testy mcfly", "password": "121"})
+        .then(res => {
+         expect(res.body).toBe({})
+        })
+    })
   })
 
   describe('/api/auth/login', function() {
@@ -22,7 +36,9 @@ describe('server.js', function() {
 
   describe('/api/jokes', function () {
     it.todo('should have access to the token')
-    it.todo('should make a request to grab the token')
-    it.todo('should return jokes if the middelware allows access')
+    it.todo('should request the token')
+    it.todo('should return jokes if token was valid')
+    it.todo('should return a content header with length of 2010')
   })
+
 })
